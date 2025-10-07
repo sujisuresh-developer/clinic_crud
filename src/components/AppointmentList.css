@@ -1,0 +1,29 @@
+.table {
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table thead {
+  font-weight: bold;
+}
+
+.table td,
+.table th {
+  vertical-align: middle;
+}
+
+.btn {
+  font-size: 0.8rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .table-responsive {
+    font-size: 0.85rem;
+  }
+  .btn {
+    font-size: 0.7rem;
+    padding: 2px 5px;
+  }
+}

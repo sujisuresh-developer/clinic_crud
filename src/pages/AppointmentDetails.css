@@ -1,0 +1,48 @@
+.appointment-details-page {
+  min-height: 90vh;
+}
+
+.table-responsive {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+.table {
+  min-width: 300px;
+  max-width: 100%;
+  width: 100%;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+h2 {
+  font-weight: bold;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .row.g-2 {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .table th,
+  .table td {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  h2 {
+    font-size: 1.5rem;
+  }
+}

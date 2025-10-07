@@ -1,0 +1,13 @@
+.book-appointment-page {
+  min-height: 90vh;
+  background: url("https://img.freepik.com/free-vector/medical-background-design_53876-97927.jpg") no-repeat center center/cover;
+}
+
+.card {
+  border-radius: 15px;
+  background-color: #ffffffcc; /* Light white transparency */
+}
+
+h2 {
+  font-weight: bold;
+}
