@@ -1,42 +1,61 @@
 import React, { useState, useEffect } from "react";
 import AppointmentForm from "../components/AppointmentForm";
-import AppointmentList from "../components/AppointmentList"; // Table version
+import AppointmentList from "../components/AppointmentList";
 import "./BookAppointment.css";
+import {
+  getAllAppointmentsAPI,
+  addAppointmentAPI,
+  updateAppointmentAPI,
+  deleteAppointmentAPI,
+} from "../services/AllApi";
 
 function BookAppointmentDetails() {
   const [appointments, setAppointments] = useState([]);
   const [editData, setEditData] = useState(null);
   const [filter, setFilter] = useState("");
   const [sortType, setSortType] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc"); // ascending/descending
+  const [sortOrder, setSortOrder] = useState("asc");
 
-  // Load appointments from localStorage
+  // Fetch appointments from JSON Server
   useEffect(() => {
-    const storedAppointments = JSON.parse(localStorage.getItem("appointments")) || [];
-    setAppointments(storedAppointments);
+    fetchAppointments();
   }, []);
 
-  // Save appointments to localStorage
-  useEffect(() => {
-    localStorage.setItem("appointments", JSON.stringify(appointments));
-  }, [appointments]);
+  // Function to fetch all appointments
+  const fetchAppointments = async () => {
+    try {
+      const data = await getAllAppointmentsAPI();
+      setAppointments(data);
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+    }
+  };
 
   // Add or update appointment
-  const handleAdd = (appointment) => {
-    if (editData) {
-      const updatedList = appointments.map((a) =>
-        a.id === editData.id ? appointment : a
-      );
-      setAppointments(updatedList);
-      setEditData(null);
-    } else {
-      setAppointments([...appointments, { ...appointment, id: Date.now() }]);
+  const handleAdd = async (appointment) => {
+    try {
+      if (editData) {
+        // Update
+        await updateAppointmentAPI(editData.id, appointment);
+        setEditData(null);
+      } else {
+        // Add
+        await addAppointmentAPI(appointment);
+      }
+      fetchAppointments();
+    } catch (error) {
+      console.error("Error saving appointment:", error);
     }
   };
 
   // Delete appointment
-  const handleDelete = (id) => {
-    setAppointments(appointments.filter((a) => a.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      await deleteAppointmentAPI(id);
+      fetchAppointments();
+    } catch (error) {
+      console.error("Error deleting appointment:", error);
+    }
   };
 
   // Edit appointment
@@ -88,8 +107,14 @@ function BookAppointmentDetails() {
             <option value="patient">Patient Name</option>
           </select>
 
-         
-          
+          <button
+            className="btn btn-outline-primary"
+            onClick={() =>
+              setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+            }
+          >
+            {sortOrder === "asc" ? "↑ Asc" : "↓ Desc"}
+          </button>
         </div>
       </div>
 

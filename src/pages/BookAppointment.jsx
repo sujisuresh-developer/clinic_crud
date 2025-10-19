@@ -1,29 +1,46 @@
 import React, { useState, useEffect } from "react";
 import AppointmentForm from "../components/AppointmentForm";
 import "./BookAppointment.css";
+import {
+  addAppointmentAPI,
+  getAllAppointmentsAPI,
+  updateAppointmentAPI,
+} from "../services/AllApi";
 
 function BookAppointment() {
   const [appointments, setAppointments] = useState([]);
   const [editData, setEditData] = useState(null);
 
+  // Fetch all appointments from JSON Server on mount
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("appointments")) || [];
-    setAppointments(stored);
+    fetchAppointments();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("appointments", JSON.stringify(appointments));
-  }, [appointments]);
+  // Function to load all appointments
+  const fetchAppointments = async () => {
+    try {
+      const response = await getAllAppointmentsAPI();
+      setAppointments(response);
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+    }
+  };
 
-  const handleAdd = (appointment) => {
-    if (editData) {
-      const updated = appointments.map((a) =>
-        a.id === editData.id ? appointment : a
-      );
-      setAppointments(updated);
-      setEditData(null);
-    } else {
-      setAppointments([...appointments, { ...appointment, id: Date.now() }]);
+  // Add or update appointment
+  const handleAdd = async (appointment) => {
+    try {
+      if (editData) {
+        // Update existing appointment
+        await updateAppointmentAPI(editData.id, appointment);
+        setEditData(null);
+      } else {
+        // Add new appointment
+        await addAppointmentAPI(appointment);
+      }
+      // Refresh list
+      fetchAppointments();
+    } catch (error) {
+      console.error("Error saving appointment:", error);
     }
   };
 
